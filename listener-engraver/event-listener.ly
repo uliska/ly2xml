@@ -38,7 +38,7 @@
 
 #(define (filename-from-staffname context)
    "Constructs a filename in the form
-      @file{@var{original_filename}-@var{staff_instrument_name}.notes} if the
+            @file{@var{original_filename}-@var{staff_instrument_name}.notes} if the
 staff has an instrument name.  If the staff has no instrument
 name, it uses "unnamed-staff" for that part of the filename."
 (let* ((inst-name (ly:context-property context 'instrumentName)))
@@ -60,7 +60,7 @@ name, it uses "unnamed-staff" for that part of the filename."
 
 #(define (moment-grace->string moment)
    "Prints a moment without grace note(s) as a float such as
-      0.25000.  Grace notes are written with the grace duration as a
+            0.25000.  Grace notes are written with the grace duration as a
 separate \"dashed\" number, i.e. 0.25000-0.12500.  This allows any
 program using the output of this function to interpret grace notes
 however they want (half duration, quarter duration?  before beat,
@@ -79,7 +79,7 @@ after beat?  etc.)."
 
 #(define (make-output-string-line context values)
    "Constructs a tab-separated string beginning with the
-      score time (derived from the context) and then adding all the
+            score time (derived from the context) and then adding all the
 values.  The string ends with a newline."
 (let* ((moment (ly:context-current-moment context)))
   (string-append
@@ -93,145 +93,137 @@ values.  The string ends with a newline."
    "\n")))
 
 
-% #(define (print-line context . values)
-%    "Prints the list of values (plus the score time) to a file, and
-% optionally outputs to the console as well.  context may be specified
-% as an engraver for convenience."
-%    (if (ly:translator? context)
-%        (set! context (ly:translator-context context)))
-%    (let* ((p (open-file (filename-from-staffname context) "a")))
-%      ;; for regtest comparison
-%     (if (defined? 'EVENT_LISTENER_CONSOLE_OUTPUT)
-%      (ly:progress
-%       (make-output-string-line context values)))
-%     (display
-%      (make-output-string-line context values)
-%      p)
-%     (close p)))
-
 #(define (print-line context . values)
-   "Rewritten output function. Only console print."
-   (if (ly:translator? context)
-       (set! context (ly:translator-context context)))
-         (ly:progress
-          (make-output-string-line context values))
-     (display
-      (make-output-string-line context values)))
+   "Prints the list of values (plus the score time) to a file, and
+       optionally outputs to the console as well.  context may be specified
+ as an engraver for convenience."
+(if (ly:translator? context)
+    (set! context (ly:translator-context context)))
+(let* ((p (open-file (filename-from-staffname context) "a")))
+  ;; for regtest comparison
+  (if (defined? 'EVENT_LISTENER_CONSOLE_OUTPUT)
+      (ly:progress
+       (make-output-string-line context values)))
+  (display
+   (make-output-string-line context values)
+   p)
+  (close p)))
 
 
-      %%% main functions
 
-      #(define (format-rest engraver event)
-         (print-line engraver
-           "rest"
-           (ly:duration->string
-            (ly:event-property event 'duration))
-           (format-moment (ly:duration-length
-                           (ly:event-property event 'duration)))))
+%%% main functions
 
-      #(define (format-note engraver event)
-         (let* ((origin (ly:input-file-line-char-column
-                         (ly:event-property event 'origin))))
-           (print-line engraver
-             "note"
-             ;; get a MIDI pitch value.
-             (+ 60 (ly:pitch-semitones
-                    (ly:event-property event 'pitch)))
-             (ly:duration->string
-              (ly:event-property event 'duration))
-             (format-moment (ly:duration-length
-                             (ly:event-property event 'duration)))
-             ;; point and click info
-             (ly:format "point-and-click ~a ~a"
-               (caddr origin)
-               (cadr origin)))))
+#(define (format-rest engraver event)
+   (print-line engraver
+     "rest"
+     (ly:duration->string
+      (ly:event-property event 'duration))
+     (format-moment (ly:duration-length
+                     (ly:event-property event 'duration)))))
 
-      #(define (format-tempo engraver event)
-         (print-line engraver
-           "tempo"
-           ; get length of quarter notes, in seconds
-           (/ (ly:event-property event 'metronome-count)
-             (format-moment (ly:duration-length (ly:event-property
-                                                 event
-                                                 'tempo-unit))))))
+#(define (format-note engraver event)
+   (let* ((origin (ly:input-file-line-char-column
+                   (ly:event-property event 'origin))))
+     (print-line engraver
+       "note"
+       ;; get a MIDI pitch value.
+       (+ 60 (ly:pitch-semitones
+              (ly:event-property event 'pitch)))
+       (ly:duration->string
+        (ly:event-property event 'duration))
+       (format-moment (ly:duration-length
+                       (ly:event-property event 'duration)))
+       ;; point and click info
+       (ly:format "point-and-click ~a ~a"
+         (caddr origin)
+         (cadr origin)))))
 
-
-      #(define (format-breathe engraver event)
-         (print-line engraver
-           "breathe"))
-
-      #(define (format-glissando engraver event)
-         (print-line engraver
-           "gliss"))
-
-      #(define (format-tie engraver event)
-         (print-line engraver
-           "tie"))
-
-      #(define (format-articulation engraver event)
-         (print-line engraver
-           "script"
-           (ly:event-property event 'articulation-type)))
-
-      #(define (format-text engraver event)
-         (print-line engraver
-           "text"
-           (ly:event-property event 'text)))
-
-      #(define (format-slur engraver event)
-         (print-line engraver
-           "slur"
-           (ly:event-property event 'span-direction)))
-
-      #(define (format-dynamic engraver event)
-         (print-line engraver
-           "dynamic"
-           (ly:event-property event 'text)))
-
-      #(define (format-cresc engraver event)
-         (print-line engraver
-           "cresc"
-           (ly:event-property event 'span-direction)))
-
-      #(define (format-decresc engraver event)
-         (print-line engraver
-           "decresc"
-           (ly:event-property event 'span-direction)))
-
-      #(define (format-textspan engraver event)
-         (let* ((context (ly:translator-context engraver))
-                (moment (ly:context-current-moment context))
-                (spanner-props (ly:context-property context 'TextSpanner))
-                (details (chain-assoc-get 'bound-details spanner-props))
-                (left-props (assoc-get 'left details '()))
-                (left-text (assoc-get 'text left-props '())))
-           (print-line engraver
-             "set_string"
-             (ly:event-property event 'span-direction)
-             left-text)))
+#(define (format-tempo engraver event)
+   (print-line engraver
+     "tempo"
+     ; get length of quarter notes, in seconds
+     (/ (ly:event-property event 'metronome-count)
+       (format-moment (ly:duration-length (ly:event-property
+                                           event
+                                           'tempo-unit))))))
 
 
-      %%%% The actual engraver definition: We just install some listeners so we
-      %%%% are notified about all notes and rests. We don't create any grobs or
-      %%%% change any settings.
+#(define (format-breathe engraver event)
+   (print-line engraver
+     "breathe"))
 
-      \layout {
-      \context {
-      \Voice
-      \consists #(make-engraver
-                  (listeners
-                   (tempo-change-event . format-tempo)
-                   (rest-event . format-rest)
-                   (note-event . format-note)
-                   (articulation-event . format-articulation)
-                   (text-script-event . format-text)
-                   (slur-event . format-slur)
-                   (breathing-event . format-breathe)
-                   (dynamic-event . format-dynamic)
-                   (crescendo-event . format-cresc)
-                   (decrescendo-event . format-decresc)
-                   (text-span-event . format-textspan)
-                   (glissando-event . format-glissando)
-                   (tie-event . format-tie)))
-      }
-      }
+#(define (format-glissando engraver event)
+   (print-line engraver
+     "gliss"))
+
+#(define (format-tie engraver event)
+   (print-line engraver
+     "tie"))
+
+#(define (format-articulation engraver event)
+   (print-line engraver
+     "script"
+     (ly:event-property event 'articulation-type)))
+
+#(define (format-text engraver event)
+   (print-line engraver
+     "text"
+     (ly:event-property event 'text)))
+
+#(define (format-slur engraver event)
+   (print-line engraver
+     "slur"
+     (ly:event-property event 'span-direction)))
+
+#(define (format-dynamic engraver event)
+   (print-line engraver
+     "dynamic"
+     (ly:event-property event 'text)))
+
+#(define (format-cresc engraver event)
+   (print-line engraver
+     "cresc"
+     (ly:event-property event 'span-direction)))
+
+#(define (format-decresc engraver event)
+   (print-line engraver
+     "decresc"
+     (ly:event-property event 'span-direction)))
+
+#(define (format-textspan engraver event)
+   (let* ((context (ly:translator-context engraver))
+          (moment (ly:context-current-moment context))
+          (spanner-props (ly:context-property context 'TextSpanner))
+          (details (chain-assoc-get 'bound-details spanner-props))
+          (left-props (assoc-get 'left details '()))
+          (left-text (assoc-get 'text left-props '())))
+     (print-line engraver
+       "set_string"
+       (ly:event-property event 'span-direction)
+       left-text)))
+
+
+%%%% The actual engraver definition: We just install some listeners so we
+%%%% are notified about all notes and rests. We don't create any grobs or
+%%%% change any settings.
+
+\layout {
+  \context {
+    \Voice
+    \consists #(make-engraver
+                (listeners
+                 (tempo-change-event . format-tempo)
+                 (rest-event . format-rest)
+                 (note-event . format-note)
+                 (articulation-event . format-articulation)
+                 (text-script-event . format-text)
+                 (slur-event . format-slur)
+                 (breathing-event . format-breathe)
+                 (dynamic-event . format-dynamic)
+                 (crescendo-event . format-cresc)
+                 (decrescendo-event . format-decresc)
+                 (text-span-event . format-textspan)
+                 (glissando-event . format-glissando)
+                 (tie-event . format-tie)))
+  }
+}
