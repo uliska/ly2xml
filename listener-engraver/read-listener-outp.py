@@ -1,5 +1,14 @@
 import subprocess
-p = subprocess.Popen(['lilypond', 'test-listener.ly'], stdout=subprocess.PIPE, 
+
+command = ['lilypond',
+            '-dno-point-and-click',
+            '-ddelete-intermediate-files',
+            'test-listener.ly']
+p = subprocess.Popen(command, stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
 out, err = p.communicate()
-print out
+
+tabsplit = out.split('\t')
+
+for tab in tabsplit:
+        print tab
