@@ -17,20 +17,19 @@
 %
 %
 %
-% This file is a rewritten version or 'event-listener.ly'
-% for the ly2xml-project.
-% The original file is used for Vivi, the Virtual Violinist:
-%   http://percival-music.ca/vivi.html
+% This file is a rewritten for the ly2xml-project.
+% The original file is 'event-listener.ly' 
+% used for Vivi, the Virtual Violinist:
+% http://percival-music.ca/vivi.html
 % but it may be helpful to other researchers, either with the same
 % output, or as a basis for other work in extracting music events
 % from lilypond.
 %
-% Output format is tab-separated lines, like this:
-%0.00000000	note	57	0.25000000	point-and-click 2 38
-%0.00000000	dynamic	f
-%0.25000000	note	62	0.25000000	point-and-click 7 38
-%0.50000000	note	66	0.12500000	point-and-click 9 38
-%0.50000000	script	staccato
+% The syntax of the output is a tab-delimited line, with 
+% two fixed fields on each line followed by optional parameters.
+% 
+% time  type  ...params...
+%
 
 
 
@@ -77,7 +76,7 @@ values.  The string ends with a newline."
     "\t")
    "\n")))
 
-
+%% rewritten to only have console output
 #(define (print-line context . values)
    "Rewritten output function. Only console print."
    (if (ly:translator? context)
@@ -97,15 +96,20 @@ values.  The string ends with a newline."
             (ly:event-property event 'duration))
            (format-moment (ly:duration-length
                            (ly:event-property event 'duration)))))
-
+      
+      
+      %% rewritten to have more relevant info about the pitch 
       #(define (format-note engraver event)
          (let* ((origin (ly:input-file-line-char-column
                          (ly:event-property event 'origin))))
            (print-line engraver
              "note"
-             ;; get a MIDI pitch value.
-             (+ 60 (ly:pitch-semitones
-                    (ly:event-property event 'pitch)))
+             (ly:pitch-notename
+                    (ly:event-property event 'pitch))
+             (ly:pitch-alteration
+                    (ly:event-property event 'pitch))
+             (ly:pitch-octave
+                    (ly:event-property event 'pitch))
              (ly:duration->string
               (ly:event-property event 'duration))
              (format-moment (ly:duration-length
