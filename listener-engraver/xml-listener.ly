@@ -182,6 +182,7 @@ values.  The string ends with a newline."
              "set_string"
              (ly:event-property event 'span-direction)
              left-text)))
+                
 
 
       %%%% The actual engraver definition: We just install some listeners so we
@@ -206,5 +207,6 @@ values.  The string ends with a newline."
                    (text-span-event . format-textspan)
                    (glissando-event . format-glissando)
                    (tie-event . format-tie)))
+
       }
       }
