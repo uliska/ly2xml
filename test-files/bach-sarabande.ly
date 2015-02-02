@@ -1,8 +1,3 @@
-% ****************************************************************
-% ly snippet:
-% ****************************************************************
-\sourcefilename "/home/gub/gub/target/linux-x86/src/lilypond-git.sv.gnu.org--lilypond.git-release-unstable/input/regression/baerenreiter-sarabande.ly"
-\sourcefileline 0
 \version "2.17.6"
 
 forcedLastBreak =  {} %%  { \break } if needed to match original breaks
@@ -60,7 +55,7 @@ sarabandeA =  \context Voice  \relative c {
 
 
   << { d8. e16 e4.\trill d16 e } \\
-    { d4 a2 } >>
+    { d4 a2 } >> |
   <d, a' f'>4.  e'8[ d c] |
   bes[ g'] f[
      e16(f] g[ a bes d,)] |
@@ -78,7 +73,7 @@ sarabandeA =  \context Voice  \relative c {
   g'8 bes16(a) c(bes) a(g) d'8 f, |
   <<  e4.\trill
     \\ <c, g'>4 >>
-  d'8[ c bes]
+  d'8[ c bes] |
 
   %%9
   << { f'8 g16(a) a4. g16(f)  |
@@ -190,9 +185,11 @@ smallerPaper = \layout {
     \sarabandeCelloStaff
     \layout { }
 
-  \midi {
+%{ 
+\midi {
     \tempo 4 = 40
-    }
+    } 
+%}
 
 
     \header{

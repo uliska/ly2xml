@@ -65,10 +65,10 @@ cello = \relative c' {
   cis, fis a |
   \time 4/4
   g,-. g-. g-. g-. b-. b-. b-. b-. |
-  \times 2/3 { g8\cresc-. g-. g-. }
+  \times 2/3 { g8-. \cresc g-. g-. }
   \times 2/3 { g8-_ g-_ g-_ }
   \times 2/3 { g8-> g-> g-> }
-  \times 2/3 { g8-^ g-^ g\!-^ } |
+  \times 2/3 { g8-^ g-^ g-^ \! } |
   c1\sfz \bar "|."
 
 }

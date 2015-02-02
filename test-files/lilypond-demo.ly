@@ -1,8 +1,5 @@
-% ****************************************************************
-% ly snippet:
-% ****************************************************************
-\sourcefilename "/home/gub/gub/target/linux-x86/src/lilypond-git.sv.gnu.org--lilypond.git-release-unstable/input/regression/typography-demo.ly"
-\sourcefileline 0
+\version "2.19.2"
+
 \header {
   title = "LilyPond demo"
   enteredby="Han-Wen Nienhuys"
@@ -13,7 +10,7 @@ heavily mutilated Edition Peters Morgenlied by Schubert"
 
 }
 
-\version "2.19.2"
+
 #(ly:expect-warning (_ "(De)crescendo with unspecified starting volume in MIDI."))
 
 ignoreMelisma =	\set ignoreMelismata = ##t
