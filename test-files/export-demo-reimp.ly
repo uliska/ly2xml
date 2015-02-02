@@ -1,6 +1,6 @@
 
 \version "2.19.16"
-% automatically converted by musicxml2ly from /home/peter/lilypond-xtra/openlilylib/ly2xml/test-files/export-demo.xml
+% automatically converted by musicxml2ly
 
 %% additional definitions required by the score:
 cresc = #(make-dynamic-script "cresc")
@@ -14,7 +14,7 @@ cresc = #(make-dynamic-script "cresc")
 PartPOneVoiceOne =  \relative g {
   \clef "treble" \time 4/4 | % 1
   g64 \mf ( d' g,32 ) d'16 ( -. d8 ) -. a' d g4 d | % 2
-  g2 d \> \! | % 3
+  g2 \> d \! | % 3
   g1 \p | % 4
   \time 8/4  d\breve | % 5
   \time 16/4  g,\longa | % 6
@@ -28,7 +28,7 @@ PartPOneVoiceOne =  \relative g {
   }
   | % 11
   \times 2/3  {
-    fis,8 -- a \< -- cis --
+    fis,8 \< -- a -- cis --
   }
   \times 2/3  {
     fis,8 -_ a -_ cis -_
@@ -47,7 +47,7 @@ PartPTwoVoiceOne =  \relative g {
   \clef "alto" \time 4/4 | % 1
   g64 \mf ( d' g,32 ) d'16 ( -. d8 ) -. a' \clef "treble" d g4 d
   | % 2
-  g2 d \> \! | % 3
+  g2 \> d \! | % 3
   g1 \p | % 4
   \time 8/4  d\breve | % 5
   \clef "alto" \time 16/4 g,\longa | % 6
@@ -61,7 +61,7 @@ PartPTwoVoiceOne =  \relative g {
   }
   | % 11
   \times 2/3  {
-    fis,8 -. a \< -. cis -.
+    fis,8 \< -. a -. cis -.
   }
   \times 2/3  {
     fis,8 -_ a -_ cis -_
@@ -79,7 +79,7 @@ PartPTwoVoiceOne =  \relative g {
 PartPThreeVoiceOne =  \relative g, {
   \clef "bass" \time 4/4 | % 1
   g64 \mf ( d' g,32 ) d'16 ( -. d8 ) -. a' \clef "tenor" d g4 d | % 2
-  g2 d \> \! | % 3
+  g2 \> d \! | % 3
   g1 \p | % 4
   \time 8/4  d\breve | % 5
   \clef "bass" \time 16/4 g,\longa | % 6
